@@ -1,4 +1,16 @@
+name: Metrics
 
-              - name: Metrics embed
-                uses: lowlighter/metrics@v3.34
-            
+on:
+  schedule:
+    - cron: '0 * * * *'  # Runs every hour
+  workflow_dispatch:
+
+jobs:
+  metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Metrics embed
+        uses: lowlighter/metrics@v3.34
+        with:
+          # Your configuration here
+          token: ${{ secrets.METRICS_TOKEN }}
