@@ -1,16 +1,26 @@
-name: Metrics
+name: Deploy
 
 on:
-  schedule:
-    - cron: '0 * * * *'  # Runs every hour
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  metrics:
+  deploy:
     runs-on: ubuntu-latest
+    name: Deploy
     steps:
-      - name: Metrics embed
-        uses: lowlighter/metrics@v3.34
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
         with:
-          # Your configuration here
-          token: ${{ secrets.METRICS_TOKEN }}
+          node-version: 16
+
+      - name: build
+        run: yarn build
+
+      - name: Publish
+        uses: cloudflare/wrangler-action@1.3.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
